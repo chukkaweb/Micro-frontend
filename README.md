@@ -1,3 +1,93 @@
+## Project setup
+Overview of Micro-Frontend Setup
+
+Create a Host Application: The main app that loads the micro-frontends.
+Create Remote Applications: The child apps (micro-frontends) that are dynamically loaded into the host app.
+Use Module Federation Plugin: To share modules and components between the host and remote apps.
+
+Step 1 install the required things node , angular or reactjs. 
+Step 2: Create the Host Application
+ng new host-app --routing --style scss
+Cd host-app
+ng add @angular-architects/module-federation --project host-app --port 4200
+
+Step 3: Create a Remote Applications ( i think we need create separate and configure in host app properly ) 
+same above steps but project name create 
+
+Step 4: Connect Remote to Host
+Update Host's webpack.config.js: Add the remote app in the remotes section:
+remotes: {
+  remoteApp: "remoteApp@http://localhost:4201/remoteEntry.js",
+},
+
+Load Remote Components in the Host App: Use Angular's dynamic module loading in the host app.
+
+Host app-routing.module.ts:
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+
+const routes: Routes = [
+  {
+    path: 'remote',
+    loadChildren: () =>
+      import('remoteApp/Component').then((m) => m.AppComponent),
+  },
+];
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule],
+})
+export class AppRoutingModule {}
+
+If a standalone component .
+ we don't have ​​Host app-routing.module.ts:file  we have app.routes.ts and app.config.ts so separate need to create 
+
+1. Why the app.config.ts File Instead of app.routing.ts?
+In Angular 18, the standalone routing API uses provideRouter to define routes directly in app.config.ts instead of using RouterModule with a module.
+
+Traditional Routing (app.routing.module.ts):
+Uses RouterModule inside an NgModule.
+Standalone Routing (app.config.ts):
+Uses the provideRouter function in a configuration file (app.config.ts).
+
+4. Why Does This Happen?
+Angular 18 Changes:
+With app.config.ts, Angular now uses standalone routing APIs, which might feel unfamiliar compared to older versions.
+Incorrect Module Federation Setup:
+If paths in webpack.config.js are incorrect, the host app cannot find the remote module.
+Remote App Issues:
+If the remoteEntry.js file or exposed component isn’t correctly configured, the host will fail to load the remote.
+
+
+
+Step 5: Share Modules Between Host and Remote
+Share Common Modules: In both webpack.config.js files, ensure common Angular modules like @angular/core and @angular/router are shared:
+
+shared: {
+  "@angular/core": { singleton: true, strictVersion: true },
+  "@angular/common": { singleton: true, strictVersion: true },
+  "@angular/router": { singleton: true, strictVersion: true },
+},
+Run the Host App:
+ng serve --port 4200
+Test the Micro-Frontend: Open http://localhost:4200/remote to see the remote component loaded into the host app.
+
+Step 7: Optimize and Deploy
+Optimize Builds:
+Use production builds:
+bash
+Copy code
+ng build --configuration production
+Deploy:
+
+Deploy the host app and remote apps to a web server or CDN, ensuring the remoteEntry.js URLs are accessible by the host app.
+
+
+
+
+# Example 2
+
 ## Configure the remote app paths in the host app step-by-step
 
  1. Verify Remote App Configuration

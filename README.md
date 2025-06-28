@@ -304,13 +304,13 @@ Remove the old module from the original repo.
 Document the change.
 
 🧠 General MFE Migration Tips
-Start small: Migrate one module at a time.
-Use Module Federation: Webpack 5 makes it easier to split and serve code remotely.
-Keep shared libraries separate: Use a shared repo/package for common components.
-Version control: Tag releases so other apps can track changes.
-Automate builds: Use CI/CD pipelines for building and deploying MFEs.
-Test integration early: Don't wait until the end to test with the shell app.
-Avoid deep dependencies: Try to minimize tight coupling between MFEs.
+1. Start small: Migrate one module at a time.
+2. Use Module Federation: Webpack 5 makes it easier to split and serve code remotely.
+3. Keep shared libraries separate: Use a shared repo/package for common components.
+4. Version control: Tag releases so other apps can track changes.
+5. Automate builds: Use CI/CD pipelines for building and deploying MFEs.
+6. Test integration early: Don't wait until the end to test with the shell app.
+7. Avoid deep dependencies: Try to minimize tight coupling between MFEs.
 
 
 
